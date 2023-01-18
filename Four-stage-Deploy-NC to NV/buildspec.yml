@@ -1,0 +1,31 @@
+version: 0.2
+
+phases: 
+  install:
+    runtime-versions:
+       python: 3.9 #install Python 3.8
+  pre_build:
+    commands:  
+     - echo Cheking Python version
+     - python3 --version
+     - echo Install cfn-lint
+     - pip3 install cfn-lint
+     - cfn-lint --version
+  build: 
+    commands:
+      - echo ****Build started on 'date' ****
+      - ls -al
+      - echo testing the template
+      - cfn-lint claudiotemplate2.yml  
+      - echo Building cloudformation template
+      - aws cloudformation package --template-file claudiotemplate2.yml --s3-bucket code-pipeline-bucket-saving --output-template-file outputemplate.yml
+       
+  post_build:
+    commands: 
+      - echo Build completed on 'date'
+      - echo completed on 'time'
+artifacts:
+  files:
+    - claudiotemplate2.yml
+    - outputemplate.yml       
+    
